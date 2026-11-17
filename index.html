@@ -1,5 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>UTransport - ASG 201</title>
+<!doctype html><html><head><meta charset="utf-8"><title>UTransport - Prototype v2</title><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -273,6 +272,23 @@ table.times tr.is-now td { background: var(--orange-soft); }
 table.times tr.is-past td { color: #a5ada6; }
 .last-tag { display: inline-block; margin-left: 4px; padding: 1px 5px; border-radius: 5px; background: var(--orange); color: #fff; font-size: 9.5px; font-weight: 800; letter-spacing: 0.06em; vertical-align: 1px; }
 
+
+/* schedule: expected times at each stop */
+.line-list li { padding: 10px 0; align-items: start; }
+.line-list .dot { margin-top: 5px; }
+.line-list li.first::before { top: 22px; }
+.line-list li.last::before { top: 0; bottom: auto; height: 22px; }
+.line-list .nm .when { display: block; margin-top: 3px; font-weight: 700; font-size: 14px; color: var(--green-ink); }
+.line-list .nm .when em { font-style: normal; color: var(--muted); font-weight: 600; }
+.line-list details.at { margin-top: 6px; }
+.line-list details.at summary { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 10px; background: var(--orange-soft); color: var(--orange); font-weight: 800; font-size: 12.5px; cursor: pointer; list-style: none; }
+.line-list details.at summary::-webkit-details-marker { display: none; }
+.line-list details.at summary svg { width: 13px; height: 13px; transition: transform 0.15s; }
+.line-list details.at[open] summary svg { transform: rotate(180deg); }
+.line-list .at-label { margin: 8px 0 0; font-weight: 700; font-size: 12px; color: var(--muted); }
+.line-list .at-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 4px; }
+.line-list .at-row span { padding: 4px 8px; border-radius: 8px; background: var(--bg); font-weight: 700; font-size: 13px; font-variant-numeric: tabular-nums; color: var(--green-ink); }
+
 /* starting locations */
 .group-label { display: flex; align-items: center; gap: 8px; margin: 20px 0 8px; font-weight: 800; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green-ink); }
 .loc { margin-bottom: 8px; border-radius: 18px; background: var(--card); box-shadow: 0 0 0 1px var(--line); overflow: hidden; }
@@ -410,7 +426,7 @@ table.times tr.is-past td { color: #a5ada6; }
     <div class="device">
       <div class="screen" id="screen">
         <div class="statusbar" id="statusbar" aria-hidden="true">
-          <span id="sbTime">9:55</span>
+          <span id="sbTime">10:00</span>
           <span class="icons">
             <svg viewBox="0 0 18 12"><path fill="currentColor" d="M1 9h2v3H1zM5 7h2v5H5zM9 4.5h2V12H9zM13 2h2v10h-2z"/></svg>
             <svg viewBox="0 0 16 12" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1.3 4.3a9.5 9.5 0 0 1 13.4 0"/><path d="M3.9 6.9a5.8 5.8 0 0 1 8.2 0"/></g><circle cx="8" cy="10.2" r="1.6" fill="currentColor"/></svg>
@@ -438,8 +454,8 @@ table.times tr.is-past td { color: #a5ada6; }
         </section>
 
         <section class="view" id="v-home" aria-label="Home" hidden>
+          <header class="appbar brand-head pad"><button class="back" type="button" data-go="choose" aria-label="Back to shuttle choices"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="brandbar head-brand"><button class="logo-link" type="button" data-go="splash" aria-label="UTransport, back to start"><span class="umark">U</span><span class="wordmark">Transport</span></button><span class="day" id="homeDay">Sat</span></div></header>
           <div class="scroll pad">
-            <div class="brandbar"><button class="logo-link" type="button" data-go="splash" aria-label="UTransport, back to start"><span class="umark">U</span><span class="wordmark">Transport</span></button><span class="day" id="homeDay">Sat</span></div>
             <div class="journey">
             <div class="live-row">
             <button class="live" type="button" data-go="map" aria-label="Open the live map">
@@ -474,7 +490,7 @@ table.times tr.is-past td { color: #a5ada6; }
           <div class="map-top pad">
             <button class="back" type="button" data-go="home" aria-label="Back to home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
             <div class="brandbar map-brand"><button class="logo-link" type="button" data-go="splash" aria-label="UTransport, back to start"><span class="umark">U</span><span class="wordmark">Transport</span></button></div>
-            <span class="map-chip" aria-label="Live"><i></i><span id="mapTime">9:55 AM</span></span>
+            <span class="map-chip" aria-label="Live"><i></i><span id="mapTime">10:00 AM</span></span>
             <button class="recenter" type="button" id="recenter" aria-label="Show the whole route"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           </div>
           <div class="sheet" id="sheet">
@@ -504,14 +520,14 @@ table.times tr.is-past td { color: #a5ada6; }
     <p class="kicker">ASG 201 app prototype<br><span style="white-space: nowrap; font-size: 10.5px; letter-spacing: 0.06em;">(Track B: Scoped Interactive Prototype)</span></p>
     <h1><button class="logo-link" type="button" data-go="splash" aria-label="UTransport, back to start" style="gap:14px"><span class="tile"><span class="umark">U</span></span><span class="wordmark">Transport</span></button></h1>
     <p>Tap through the app on the phone. The clock is a simulated Saturday, so the live views move.</p>
-    <div class="demo-clock"><span>Saturday</span><b id="demoTime">9:55 AM</b></div>
+    <div class="demo-clock"><span>Saturday</span><b id="demoTime">10:00 AM</b></div>
     <ul class="demo-buses" id="demoBuses"></ul>
     <div class="demo-row">
       <button class="pill-btn" type="button" id="demoPlay">Pause</button>
       <small>Speed</small>
-      <button class="pill-btn is-on" type="button" data-speed="1">1×</button>
+      <button class="pill-btn" type="button" data-speed="1">1×</button>
       <button class="pill-btn" type="button" data-speed="10">10×</button>
-      <button class="pill-btn" type="button" data-speed="60">60×</button>
+      <button class="pill-btn is-on" type="button" data-speed="60">60×</button>
     </div>
     <div class="demo-row">
       <small>Jump to</small>
@@ -612,8 +628,7 @@ window.APP_ROUTE = {"line":[[25.715681,-80.280722],[25.715451,-80.280739],[25.71
   const nextDeparture = (i, t) => departures(i).find((d) => d > t - 0.01) ?? null;
 
   const END = 16 * 60; // 4:00 p.m.
-  let t = 9 * 60 + 55, speed = 1, playing = true;
-  try { const v = Number(localStorage.getItem("ut-speed")); if ([1, 10, 60].includes(v)) speed = v; } catch (e) { /* storage may be blocked */ }
+  let t = 10 * 60, speed = 60, playing = true; // the demo opens at 10:00 a.m., playing at 60x
 
   /* ---------- navigation ---------- */
   const VIEWS = ["splash", "choose", "home", "schedule", "map", "locations", "faq"];
@@ -671,9 +686,15 @@ window.APP_ROUTE = {"line":[[25.715681,-80.280722],[25.715451,-80.280739],[25.71
   (function buildSchedule() {
     const rows = [];
     STOPS.forEach((s, i) => {
-      rows.push(`<li class="${i === 0 ? "first" : ""}"><span class="dot"></span><span class="nm">${s.name}<small>${i === 0 ? "" : `Stops ${DWELL} min, then `}${i === 0 ? "About" : "about"} ${(i === STOPS.length - 1 ? BACK : STOPS[i + 1].minute - DWELL) - s.minute} min to ${i === STOPS.length - 1 ? "Wellness Center" : STOPS[i + 1].name}</small></span></li>`);
+      const pull = s.minute - DWELL; // when the bus pulls in; it leaves DWELL min later (Wellness Center only leaves)
+      const when = i === 0
+        ? `Leaves ${both(s.minute)} <em>every hour</em>`
+        : `Stops ${both(pull)} <em>every hour</em>`;
+      const times = i === 0 ? LOOPS.map((T0) => fmt(T0, false)) : LOOPS.map((T0) => fmt(T0 + pull, false));
+      const label = i === 0 ? "Departure times (last bus leaves 3:30 p.m.)" : `Expected pull-in times, leaves ${DWELL} min later`;
+      rows.push(`<li class="${i === 0 ? "first" : ""}"><span class="dot"></span><span class="nm">${s.name}<span class="when">${when}</span><small>${i === 0 ? "" : `Stops ${DWELL} min, then `}${i === 0 ? "About" : "about"} ${(i === STOPS.length - 1 ? BACK : STOPS[i + 1].minute - DWELL) - s.minute} min to ${i === STOPS.length - 1 ? "Wellness Center" : STOPS[i + 1].name}</small><details class="at"><summary>All times ${CHEV_DOWN}</summary><p class="at-label">${label}</p><div class="at-row">${times.map((x) => `<span>${x}</span>`).join("")}</div></details></span></li>`);
     });
-    rows.push(`<li class="last"><span class="dot"></span><span class="nm">Back at Wellness Center</span></li>`);
+    rows.push(`<li class="last"><span class="dot"></span><span class="nm">Back at Wellness Center<span class="when">Arrives about ${both(BACK)} <em>every hour</em></span></span></li>`);
     $("#lineList").innerHTML = rows.join("");
     if ($("#timesTable")) $("#timesTable").innerHTML = `<thead><tr><th>Loop</th>${STOPS.map((s) => `<th>${s.short}</th>`).join("")}</tr></thead><tbody>${
       LOOPS.map((T0) => `<tr data-t0="${T0}"><td>${fmt(T0, false)}${T0 === LOOP.last ? '<span class="last-tag">LAST</span>' : ""}</td>${STOPS.map((s) => `<td>${fmt(T0 + s.minute, false)}</td>`).join("")}</tr>`).join("")
